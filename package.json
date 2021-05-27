@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -34,7 +34,14 @@
     "trailingComma": "es5"
   },
   "name": "use-stepwise-execution",
-  "author": "Mukarram Ishaq",
+  "author": {
+    "name": "Mukarram Ishaq",
+    "email": "mukarramishaq189@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mukarramishaq/use-stepwise-execution.git"
+  },
   "module": "dist/use-stepwise-execution.esm.js",
   "size-limit": [
     {
