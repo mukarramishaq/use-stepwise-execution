@@ -300,6 +300,35 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
     sharedState,
 
     /**
+     * this will update the shared state which
+     * is accessible to all the steps and to all
+     * their handlers. whatever you'll pass to
+     * this function will be treated as shared state.
+     * 
+     * e.g 
+     * ```
+     * updateSharedState({firstName: "john", lastName: "Doe"});
+     * ```
+     * 
+     * NOTE: if you just want to update some value in the
+     * shared state not overwrite the whole state then pass
+     * function.
+     * 
+     * e.g
+     * ```
+     * updateSharedState((previousState: any) => {
+     *    return {
+     *        ...previousState,
+     *        firstName: "fs name",
+     *        lastName: "ls name"
+     *    };
+     * });
+     * ```
+     * 
+     */
+    updateSharedState: setSharedState,
+
+    /**
      * this will hold the output of current step execution.
      * if the current step execution is not run yet then it
      * will hold the last step execution

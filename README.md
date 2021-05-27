@@ -1,160 +1,198 @@
-# TSDX React User Guide
+# React useStepwiseExecution Hook
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+This react hook will give you the funtionality to perform a long and complex logic or multiple interlinked logics through multiple simple steps and will give you full control over each step so you can build more sophisticated functionality around it.
 
-> This TSDX setup is meant for developing React component libraries (not apps!) that can be published to NPM. If you’re looking to build a React-based app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
+## Installation
 
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
-
-## Commands
-
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
-
-The recommended workflow is to run TSDX in one terminal:
+You can install this hook using the following command:
 
 ```bash
-npm start # or yarn start
+npm i --save use-stepwise-hook # or yarn add use-stepwise-hook
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+## Usage Example
 
-Then run the example inside another:
+Suppose we have page where a user puts his `first name`, `last name`, `email address`, `password`
+and `credit card details` to purchase a subscription. Now, what we want is that user can subscribe given:
 
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
-```
+  1. If the user account is not created then create it using the given information.
+  2. if the user account already exists then login it first using the given `email address` and `password`.
+  3. if the email is not verified whether it is newly created or the account already exists then prompt user to verify the email address. And must not go onward until the email is verified.
+  4. Once, all of the previous requirements are fulfilled then use the credit card info and verify its valid.
+  5. Once the card is valid then perform subscription.
+  6. On subscription success, subscription redirect the user to somewhere desired
+  7. On subscription failure, show the user whats wrong
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, we use [Parcel's aliasing](https://parceljs.org/module_resolution.html#aliases).
+Now this is one hell of a long logic to accomplish one thing which is subscription and each step is very crucial. We want to implement this in react and we dont want to miss any step or moves to the next step without passing the previous step. So thats where our `useStepwiseExecution` hook comes to rescue.
 
-To do a one-off build, use `npm run build` or `yarn build`.
+```javascript
+import { useStepwiseExecution } from "use-stepwise-execution";
+import stepsAndHandlers from "./subscription-steps"; // this file will contain all our logic in steps
 
-To run tests, use `npm test` or `yarn test`.
+const SubscriptionPage = (props: any) => {
+  const [formData, setFormData] = useState<any>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    cardInfo: {}
+  });
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-## Configuration
+  const {
+    currentStep, // current step which is either executed or needs to execute
+    isLoading, // if current step execution is in progress or not
+    isCompleted, //if current step execution is done
+    isSuccess, //if current step execution is success or not
+    next, //this will move the execution to next step
+    execute, //this will execute all the handlers of current step
+    isAllDone, //is true when the last step is successfully executed
+    updateSharedState // function to update the state which is accessibel to all step handlers
+  } = useStepwiseExecution(0, stepsAndHandlers); //0 means start the execution from step 0, whereas second param is all about steps and their handlers
 
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
+  //whenever form values change, update the form values
+  // in the shared state, so our step handlers can use them
+  useEffect(() => {
+    updateSharedState((previousState: any) => ({
+      ...previousState,
+      form: formData
+    }));
+  }, [formData]);
 
-### Jest
+  //on submission of form run the steps
+  useEffect(() => {
+    //if submit button is clicked, and 
+    if (isSubmitting && !isSuccess) {
+      //execute all the handlers of current step
+      execute().then(() => {
+        //on successful execution of current step
+        //moves to next step
+        next();
+      }).catch(e => {
+        //on encountering error in the execution of current step
+        //show the respective message to user or ask for changes
+        //and stop the execution here
+        setIsSubmitting(false);
+      });
+    }
+  }, [isSubmitting, isSuccess]);
 
-Jest tests are set up to run with `npm test` or `yarn test`.
-
-### Bundle analysis
-
-Calculates the real cost of your library using [size-limit](https://github.com/ai/size-limit) with `npm run size` and visulize it with `npm run analyze`.
-
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```txt
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
-```
-
-#### React Testing Library
-
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
-
-### Rollup
-
-TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
-
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### GitHub Actions
-
-Two actions are added by default:
-
-- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
-- `size` which comments cost comparison of your library on every pull request using [`size-limit`](https://github.com/ai/size-limit)
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
 }
+
 ```
 
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+That's it. What we have done here is just set up structure of execution. and we have taken all the logic away from the component to a separate file `subscription-steps.ts` which will only contain step and their handlers (functions). We wont be interacting with UI there. Our whole focus there, will be to create step and their handlers (functions) where each step will perform a specific task only.
 
-## Module Formats
+Now lets see what's inside `subscription-steps.ts`
 
-CJS, ESModules, and UMD module formats are supported.
+```javascript
+import { StepHandlerType } from "use-stepwise-hook";
 
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
 
-## Deploying the Example Playground
+const stepsAndHandlers: Array<Array<StepHandlerType>> = [
+  [
+    (po, sharedState, setSharedState) => {
+        //create an account with given information which is stored in sharedState
 
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
+        return {
+          status: "success"
+        }; // whatever you want to send just to let the next handler know what happens here and what you need to do according
+    },
+    (po, sharedState, setSharedState) => {
+        if (po.status === "success") { //account is created.
+          return po;
+        }
+        //otherwise try to logic through email and address
+        //if login success then return true otherwise throw
+        //an error 
+        return true;
+    },
+  ], //first step
+  [
+    (po, sharedState, setSharedState) => {
+        //po is true
+        //logic to check email is verified or not
+        //if verified return true otherwise throw error
+        //to stop the execution here and let the user know
+        if (notverified) {
+          throw {
+            type: "error",
+            message: "Email is not verified",
+            code: "unverifed-email"
+          };
+        }
+        return true
+    }
+  ], //Second step
 
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
+  [
+    (po, sharedState, setSharedState) => {
+      //logic to check the credit card info
+      return true;
+    },
+    (po, sharedState, setSharedState) => {
+      //logic to attach the card to the user created account on valid card
+      return true;
+    },
+  ], // Third step
+  [
+    (po, sharedState, setSharedState) => {
+      //logic to perfoma payment from the card for subscription
+      //throw any error when you want to stop execution here or to show some data to user
+      return true;
+    }
+  ], // fourth step
+  [
+    (po, sharedState, setSharedState) => {
+      //verify subscription and everything is done here
+      return true;
+    },
+  ]
+
+];
+
 ```
 
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+<!-- 
+const stepsAndHandlers: Array<Array<StepHandlerType>> = [
+  [], //step one. it has no handlers. it is empty. I have left it empty for nothing :P .
+  [
+    (po, sharedState, setSharedState) => {
+      //suppose sharedState is an empty object
+      //sharedState = {}
+      setSharedState((ps: any) => ({
+        ...ps,
+        token: "123"
+      }));
+      //your logic
+      return "anything";
+    }, // first handler 'of step two
+    (po, sharedState, setSharedState) => {
+      //here po = "anything"
+      //sharedState = {}
+      return "nothing";
+    }, // second handler of step two
+    (po, sharedState, setSharedState) => {
+      //here po = "nothing"
+      //sharedState = {}
+      return "nothing";
+    }, // third handler of step two
+    .
+    .
+    .
+    (po, sharedState, setSharedState) => {
+      //sharedState = {}
+      return ["everything"];
+    }, // Nth handler of step two
+  ], //Second step
 
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
-```
-
-## Named Exports
-
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
-
-## Including Styles
-
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
-
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
-
-## Publishing to NPM
-
-We recommend using [np](https://github.com/sindresorhus/np).
-
-## Usage with Lerna
-
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
-```
-
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
+  [
+    (po, sharedState, setSharedState) => {
+      //here po = ["everything"]
+      //sharedState = {token: "123"}
+      //your logic
+      return "anything";
+    }, // first handler 'of step two
+  ] // Third step
+];
+-->
