@@ -42,8 +42,7 @@ const SubscriptionPage = (props: any) => {
   const {
     currentStep, // current step which is either executed or needs to execute
     isLoading, // if current step execution is in progress or not
-    isCompleted, //if current step execution is done
-    isSuccess, //if current step execution is success or not
+    status, // current step execution status
     next, //this will move the execution to next step
     execute, //this will execute all the handlers of current step
     isAllDone, //is true when the last step is successfully executed
@@ -62,9 +61,9 @@ const SubscriptionPage = (props: any) => {
   //on submission of form run the steps
   useEffect(() => {
     //if submit button is clicked, and 
-    if (isSubmitting && !isSuccess) {
+    if (isSubmitting && status !== "success") {
       //execute all the handlers of current step
-      execute().then(() => {
+      !isLoading && execute().then(() => {
         //on successful execution of current step
         //moves to next step
         next();
@@ -75,7 +74,7 @@ const SubscriptionPage = (props: any) => {
         setIsSubmitting(false);
       });
     }
-  }, [isSubmitting, isSuccess]);
+  }, [isSubmitting, status, isLoading]);
 
 }
 

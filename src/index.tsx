@@ -46,6 +46,11 @@ export type StepHandlerType = (data: any, sharedState: any, setSharedState: Reac
  * */
 export type StepsAndHandlersMapType = Array<Array<StepHandlerType>>;
 
+/**
+ * every step will have one the following status showing
+ * where its execution is
+ */
+export type StepExecutionStatus = "notstarted" | "inprogress" | "success" | "error";
 
 /**
  * main hook which will give you the functionality
@@ -83,10 +88,8 @@ export type StepsAndHandlersMapType = Array<Array<StepHandlerType>>;
 const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMapType) => {
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [stepsAndHandlers, setStepsAndHandlers] = useState(stepsHandlers);
-  const [lastStepOutput, setLastStepOutput] = useState<any>(undefined);
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const [isCompleted, setIsCompleted] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [stepOutput, setStepOutput] = useState<any>(undefined);
+  const [status, setStatus] = useState<StepExecutionStatus>("notstarted");
   const [isAllDone, setIsAllDone] = useState<boolean>(false);
   const [sharedState, setSharedState] = useState<any>({});
 
@@ -115,9 +118,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
    */
   const setCurrentStepAndReset = useCallback((step: number) => {
     setCurrentStep(step);
-    setIsCompleted(false);
-    setIsSuccess(false);
-    setLoading(false);
+    setStatus("notstarted");
   }, []);
 
   /**
@@ -144,7 +145,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
    * @param {Boolean} force 
    */
   const next = useCallback((force = false) => {
-    if (force || (isCompleted && isSuccess)) {
+    if (force || status === "success") {
       //if is all steps executed
       if (currentStep === stepsAndHandlers.length - 1) {
         setIsAllDone(true);
@@ -152,12 +153,10 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
         setCurrentStep((previousStep) => {
           return previousStep + 1;
         });
-        setIsCompleted(false);
-        setIsSuccess(false);
-        setLoading(false);
+        setStatus("notstarted");
       }
     }
-  }, [currentStep, isCompleted, isSuccess, stepsAndHandlers]);
+  }, [currentStep, status, stepsAndHandlers]);
 
   /**
    * this function will execute all handlers
@@ -180,27 +179,23 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
     if (stepsAndHandlers.length < 1) {
       return null;
     }
-    if (!force && isCompleted && isSuccess) {
-      return lastStepOutput;
+    if (!force && status === "success") {
+      return stepOutput;
     }
     try {
-      setLoading(true);
+      setStatus("inprogress");
       const finalOutput = await stepsAndHandlers[currentStep].reduce(async (previousOutputPromise, nextHandler) => {
         const previousOutput = await previousOutputPromise;
         return await nextHandler(previousOutput, sharedState, setSharedState);
-      }, Promise.resolve(lastStepOutput));
-      setLoading(false);
-      setLastStepOutput(finalOutput);
-      setIsCompleted(true);
-      setIsSuccess(true);
+      }, Promise.resolve(setStepOutput));
+      setStepOutput(finalOutput);
+      setStatus("success")
       return finalOutput;
     } catch (e) {
-      setLoading(false);
-      setIsCompleted(true);
-      setIsSuccess(false);
+      setStatus("error");
       throw e;
     }
-  }, [currentStep, stepsAndHandlers, isCompleted, isSuccess, sharedState, lastStepOutput]);
+  }, [currentStep, stepsAndHandlers, status, sharedState, setStepOutput]);
 
 
   return {
@@ -231,21 +226,17 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
     execute,
 
     /**
-     * this flag tells whether the execution of
-     * current step is completed or not. It does
-     * not matter whether the execution failed or
-     * succeeded. It will only tell whether it ran or not.
-     * @type {Boolean}
+     * this will tell the status of current step execution.
+     * It will have one of the following values to show our execution status
+     * of current step:
+     * 
+     * ```
+     * "notstarted" | "inprogress" | "success" | "error"
+     * ```
+     * 
+     * @type {StepExecutionStatus}
      */
-    isCompleted,
-
-    /**
-     * unlike `isCompleted`, this flag will tell
-     * whether the current step execution gets
-     * completed with success or not
-     * @type {Boolean}
-     */
-    isSuccess,
+    status: status,
 
     /**
      * whenever the current step execution is running
@@ -253,7 +244,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
      * 
      * @type {Boolean}
      */
-    isLoading,
+    isLoading: status === "inprogress",
 
     /**
      * this will move to next step
@@ -330,11 +321,11 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
 
     /**
      * this will hold the output of current step execution.
-     * if the current step execution is not run yet then it
-     * will hold the last step execution
+     * if the current step execution has not run yet then it
+     * will hold the previous step execution output
      * @type {any}
      */
-    lastStepOutput,
+    stepOutput,
 
     /**
      * registered steps and their handlers
@@ -360,10 +351,8 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
       setCurrentStepAndReset,
       setSharedState,
       setStepsAndHandlers,
-      setLastStepOutput,
-      setIsCompleted,
-      setIsSuccess,
-      setLoading,
+      setStepOutput,
+      setStatus,
       setIsAllDone
     }
   }
