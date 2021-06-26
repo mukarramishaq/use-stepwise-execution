@@ -147,7 +147,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
   const next = useCallback((force = false) => {
     if (force || status === "success") {
       //if is all steps executed
-      if (currentStep === stepsAndHandlers.length - 1) {
+      if (currentStep >= stepsAndHandlers.length - 1) {
         setIsAllDone(true);
       } else {
         setCurrentStep((previousStep) => {
