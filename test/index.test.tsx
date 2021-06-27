@@ -1,55 +1,55 @@
-import { renderHook, act, RenderResult } from "@testing-library/react-hooks";
-import useStepwiseExecution, { StepsAndHandlersMapType } from "../src";
+import { renderHook, act, RenderResult } from '@testing-library/react-hooks';
+import useStepwiseExecution, { StepsAndHandlersMapType } from '../src';
 
 
-describe("Initialization of the hook", () => {
+describe('Initialization of the hook', () => {
     const { result } = renderHook(({ initialStep, stepsAndHandlers }: { initialStep: number, stepsAndHandlers: StepsAndHandlersMapType }) => {
         return useStepwiseExecution(initialStep, stepsAndHandlers)
     }, { initialProps: { initialStep: 0, stepsAndHandlers: [] } });
-    test("testing return data from hook first call", async () => {
+    test('testing return data from hook first call', async () => {
         expect(result.current.currentStep).toBe(0);
         expect(result.current.isAllDone).toBe(false);
         expect(result.current.isLoading).toBe(false);
-        expect(result.current.status).toBe("notstarted");
+        expect(result.current.status).toBe('notstarted');
         expect(result.current.stepOutput).toBeUndefined();
         expect(result.current.sharedState).toEqual({});
     });
 });
 
-describe("Before executing a step", () => {
+describe('Before executing a step', () => {
     const { result } = renderHook(({ initialStep, stepsAndHandlers }: { initialStep: number, stepsAndHandlers: StepsAndHandlersMapType }) => {
         return useStepwiseExecution(initialStep, stepsAndHandlers)
     }, { initialProps: { initialStep: 0, stepsAndHandlers: [] } });
-    test("testing current step", async () => {
+    test('testing current step', async () => {
         expect(result.current.currentStep).toBe(0);
     });
-    test("testing current step", async () => {
+    test('testing current step', async () => {
         expect(result.current.isLoading).toBe(false);
     });
-    test("testing status of current step", async () => {
-        expect(result.current.status).toBe("notstarted");
+    test('testing status of current step', async () => {
+        expect(result.current.status).toBe('notstarted');
     });
-    test("testing step output", async () => {
+    test('testing step output', async () => {
         expect(result.current.stepOutput).toBeUndefined();
     });
-    test("testing shared state", async () => {
+    test('testing shared state', async () => {
         expect(result.current.sharedState).toEqual({});
     });
-    test("testing isAllDone flag", async () => {
+    test('testing isAllDone flag', async () => {
         expect(result.current.isAllDone).toBe(false);
     });
-    test("testing setting shared state", async () => {
+    test('testing setting shared state', async () => {
         const { result } = renderHook(({ initialStep, stepsAndHandlers }: { initialStep: number, stepsAndHandlers: StepsAndHandlersMapType }) => {
             return useStepwiseExecution(initialStep, stepsAndHandlers)
         }, { initialProps: { initialStep: 0, stepsAndHandlers: [] } });
         act(() => {
-            result.current.updateSharedState(() => "hello");
+            result.current.updateSharedState(() => 'hello');
         });
-        expect(result.current.sharedState).toBe("hello");
+        expect(result.current.sharedState).toBe('hello');
     });
 });
 
-describe("While executing a step", () => {
+describe('While executing a step', () => {
     let result: RenderResult<any> | undefined;
 
     beforeEach(() => {
@@ -76,27 +76,27 @@ describe("While executing a step", () => {
         result = undefined;
     });
 
-    test("testing current step", async () => {
+    test('testing current step', async () => {
         expect(result?.current.currentStep).toBe(0);
     });
-    test("testing isLoading flag", async () => {
+    test('testing isLoading flag', async () => {
         expect(result?.current.isLoading).toBe(true);
     });
-    test("testing status of current step", async () => {
-        expect(result?.current.status).toBe("inprogress");
+    test('testing status of current step', async () => {
+        expect(result?.current.status).toBe('inprogress');
     });
-    test("testing step output", async () => {
+    test('testing step output', async () => {
         expect(result?.current.stepOutput).toBeUndefined();
     });
-    test("testing shared state", async () => {
+    test('testing shared state', async () => {
         expect(result?.current.sharedState).toEqual({});
     });
-    test("testing isAllDone flag", async () => {
+    test('testing isAllDone flag', async () => {
         expect(result?.current.isAllDone).toBe(false);
     });
 });
 
-describe("After successful execution of a step", () => {
+describe('After successful execution of a step', () => {
     let result: RenderResult<any> | undefined;
     // let waitForNextUpdate: WaitForNextUpdate | undefined;
     beforeEach(() => {
@@ -121,37 +121,37 @@ describe("After successful execution of a step", () => {
         result = undefined;
     });
 
-    test("testing current step", async () => {
+    test('testing current step', async () => {
         await act(async () => {
             await result?.current.execute();
         });
         expect(result?.current.currentStep).toBe(0);
     });
-    test("testing isLoading flag", async () => {
+    test('testing isLoading flag', async () => {
         await act(async () => {
             await result?.current.execute();
         });
         expect(result?.current.isLoading).toBe(false);
     });
-    test("testing status of current step", async () => {
+    test('testing status of current step', async () => {
         await act(async () => {
             await result?.current.execute();
         });
-        expect(result?.current.status).toBe("success");
+        expect(result?.current.status).toBe('success');
     });
-    test("testing step output", async () => {
+    test('testing step output', async () => {
         await act(async () => {
             await result?.current.execute();
         });
         expect(result?.current.stepOutput).toBe(100);
     });
-    test("testing shared state", async () => {
+    test('testing shared state', async () => {
         await act(async () => {
             await result?.current.execute()
         });
         expect(result?.current.sharedState).toEqual({});
     });
-    test("testing isAllDone flag", async () => {
+    test('testing isAllDone flag', async () => {
         await act(async () => {
             await result?.current.execute();
         });
@@ -159,7 +159,7 @@ describe("After successful execution of a step", () => {
     });
 });
 
-describe("After failed execution of a step", () => {
+describe('After failed execution of a step', () => {
     let result: RenderResult<any> | undefined;
     // let waitForNextUpdate: WaitForNextUpdate | undefined;
     beforeEach(() => {
@@ -170,7 +170,7 @@ describe("After failed execution of a step", () => {
                 initialStep: 0, stepsAndHandlers: [
                     [
                         async () => {
-                            throw Error("Failed");
+                            throw Error('Failed');
                         }
                     ]
                 ]
@@ -184,50 +184,50 @@ describe("After failed execution of a step", () => {
         result = undefined;
     });
 
-    test("Expecting an error", async () => {
+    test('Expecting an error', async () => {
         await act(async () => {
             await result?.current.execute().catch((e: Error) => {
-                expect(e).toEqual(Error("Failed"));
+                expect(e).toEqual(Error('Failed'));
             });
         });
     });
 
-    test("testing current step", async () => {
+    test('testing current step', async () => {
         await act(async () => {
             await result?.current.execute().catch(() => {
                 expect(result?.current.currentStep).toBe(0);
             });
         });
     });
-    test("testing isLoading flag", async () => {
+    test('testing isLoading flag', async () => {
         await act(async () => {
             await result?.current.execute().catch(() => {
                 expect(result?.current.isLoading).toBe(false);
             });
         });
     });
-    test("testing status of current step", async () => {
+    test('testing status of current step', async () => {
         await act(async () => {
             await result?.current.execute().catch(() => {
-                expect(result?.current.status).toBe("error");
+                expect(result?.current.status).toBe('error');
             });
         });
     });
-    test("testing step output", async () => {
+    test('testing step output', async () => {
         await act(async () => {
             await result?.current.execute().catch(() => {
                 expect(result?.current.stepOutput).toBeUndefined();
             });
         });
     });
-    test("testing shared state", async () => {
+    test('testing shared state', async () => {
         await act(async () => {
             await result?.current.execute().catch(() => {
                 expect(result?.current.sharedState).toEqual({});
             })
         });
     });
-    test("testing isAllDone flag", async () => {
+    test('testing isAllDone flag', async () => {
         await act(async () => {
             await result?.current.execute().catch(() => {
                 expect(result?.current.isAllDone).toBe(false);
@@ -236,7 +236,7 @@ describe("After failed execution of a step", () => {
     });
 });
 
-describe("After all steps are executed", () => {
+describe('After all steps are executed', () => {
     let result: RenderResult<any> | undefined;
     // let waitForNextUpdate: WaitForNextUpdate | undefined;
     beforeEach(async () => {
@@ -248,49 +248,49 @@ describe("After all steps are executed", () => {
                     [
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("10");
+                                st.push('10');
                                 return st;
                             });
-                            return "10";
+                            return '10';
                         },
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("11");
+                                st.push('11');
                                 return st;
                             });
-                            return po + "11";
+                            return po + '11';
                         }
                     ], //first step and its handlers
                     [
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("20");
+                                st.push('20');
                                 return st;
                             });
-                            return po + "20";
+                            return po + '20';
                         },
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("21");
+                                st.push('21');
                                 return st;
                             });
-                            return po + "21";
+                            return po + '21';
                         }
                     ], //second step and its handlers
                     [
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("30");
+                                st.push('30');
                                 return st;
                             });
-                            return po + "30";
+                            return po + '30';
                         },
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("31");
+                                st.push('31');
                                 return st;
                             });
-                            return po + "31";
+                            return po + '31';
                         }
                     ] //third step and its handlers
                 ]
@@ -322,27 +322,27 @@ describe("After all steps are executed", () => {
         result = undefined;
     });
 
-    test("testing current step", async () => {
+    test('testing current step', async () => {
         expect(result?.current.currentStep).toBe(2);
     });
-    test("testing isLoading flag", async () => {
+    test('testing isLoading flag', async () => {
         expect(result?.current.isLoading).toBe(false);
     });
-    test("testing status of current step", async () => {
-        expect(result?.current.status).toBe("success");
+    test('testing status of current step', async () => {
+        expect(result?.current.status).toBe('success');
     });
-    test("testing Final output", async () => {
-        expect(result?.current.stepOutput).toBe("101120213031");
+    test('testing Final output', async () => {
+        expect(result?.current.stepOutput).toBe('101120213031');
     });
-    test("testing shared state", async () => {
-        expect(result?.current.sharedState).toEqual(["10", "11", "20", "21", "30", "31"]);
+    test('testing shared state', async () => {
+        expect(result?.current.sharedState).toEqual(['10', '11', '20', '21', '30', '31']);
     });
-    test("testing isAllDone flag", async () => {
+    test('testing isAllDone flag', async () => {
         expect(result?.current.isAllDone).toBe(true);
     });
 });
 
-describe("After Jumping to specific step", () => {
+describe('After Jumping to specific step', () => {
     let result: RenderResult<any> | undefined;
     // let waitForNextUpdate: WaitForNextUpdate | undefined;
     beforeEach(async () => {
@@ -354,65 +354,65 @@ describe("After Jumping to specific step", () => {
                     [
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("10");
+                                st.push('10');
                                 return st;
                             });
-                            return "10";
+                            return '10';
                         },
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("11");
+                                st.push('11');
                                 return st;
                             });
-                            return po + "11";
+                            return po + '11';
                         }
                     ], //first step and its handlers
                     [
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("20");
+                                st.push('20');
                                 return st;
                             });
-                            return po + "20";
+                            return po + '20';
                         },
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("21");
+                                st.push('21');
                                 return st;
                             });
-                            return po + "21";
+                            return po + '21';
                         }
                     ], //second step and its handlers
                     [
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("30");
+                                st.push('30');
                                 return st;
                             });
-                            return po + "30";
+                            return po + '30';
                         },
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("31");
+                                st.push('31');
                                 return st;
                             });
-                            return po + "31";
+                            return po + '31';
                         }
                     ], //third step and its handlers
                     [
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("40");
+                                st.push('40');
                                 return st;
                             });
-                            return po + "40";
+                            return po + '40';
                         },
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("41");
+                                st.push('41');
                                 return st;
                             });
-                            return po + "41";
+                            return po + '41';
                         }
                     ] //forth step and its handlers
                 ]
@@ -437,29 +437,29 @@ describe("After Jumping to specific step", () => {
         result = undefined;
     });
 
-    test("testing current step", async () => {
+    test('testing current step', async () => {
         expect(result?.current.currentStep).toBe(2);
     });
-    test("testing isLoading flag", async () => {
+    test('testing isLoading flag', async () => {
         expect(result?.current.isLoading).toBe(false);
     });
-    test("testing status of current step", async () => {
-        expect(result?.current.status).toBe("success");
+    test('testing status of current step', async () => {
+        expect(result?.current.status).toBe('success');
     });
-    test("testing Final output", async () => {
-        expect(result?.current.stepOutput).toBe("10113031");
+    test('testing Final output', async () => {
+        expect(result?.current.stepOutput).toBe('10113031');
     });
-    test("testing shared state", async () => {
-        expect(result?.current.sharedState).toEqual(["10", "11", "30", "31"]);
+    test('testing shared state', async () => {
+        expect(result?.current.sharedState).toEqual(['10', '11', '30', '31']);
     });
-    test("testing isAllDone flag", async () => {
+    test('testing isAllDone flag', async () => {
         expect(result?.current.isAllDone).toBe(false);
     });
 });
 
 
 
-describe("Executing when 0 steps and handlers given", () => {
+describe('Executing when 0 steps and handlers given', () => {
     let result: RenderResult<any> | undefined;
     // let waitForNextUpdate: WaitForNextUpdate | undefined;
     beforeEach(async () => {
@@ -484,28 +484,28 @@ describe("Executing when 0 steps and handlers given", () => {
         result = undefined;
     });
 
-    test("testing current step", async () => {
+    test('testing current step', async () => {
         expect(result?.current.currentStep).toBe(0);
     });
-    test("testing isLoading flag", async () => {
+    test('testing isLoading flag', async () => {
         expect(result?.current.isLoading).toBe(false);
     });
-    test("testing status of current step", async () => {
-        expect(result?.current.status).toBe("notstarted");
+    test('testing status of current step', async () => {
+        expect(result?.current.status).toBe('notstarted');
     });
-    test("testing Final output", async () => {
+    test('testing Final output', async () => {
         expect(result?.current.stepOutput).toBeUndefined();
     });
-    test("testing shared state", async () => {
+    test('testing shared state', async () => {
         expect(result?.current.sharedState).toEqual([]);
     });
-    test("testing isAllDone flag", async () => {
+    test('testing isAllDone flag', async () => {
         expect(result?.current.isAllDone).toBe(false);
     });
 });
 
 
-describe("Force Executing a step again", () => {
+describe('Force Executing a step again', () => {
     let result: RenderResult<any> | undefined;
     // let waitForNextUpdate: WaitForNextUpdate | undefined;
     beforeEach(async () => {
@@ -517,17 +517,17 @@ describe("Force Executing a step again", () => {
                     [
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("10");
+                                st.push('10');
                                 return st;
                             });
-                            return po+"10";
+                            return po + '10';
                         },
                         async (po, st, setSharedState) => {
                             setSharedState((st: Array<string>) => {
-                                st.push("11");
+                                st.push('11');
                                 return st;
                             });
-                            return po + "11";
+                            return po + '11';
                         }
                     ], //first step and its handlers
                 ]
@@ -550,22 +550,22 @@ describe("Force Executing a step again", () => {
         result = undefined;
     });
 
-    test("testing current step", () => {
+    test('testing current step', () => {
         expect(result?.current.currentStep).toBe(0);
     });
-    test("testing isLoading flag",() => {
+    test('testing isLoading flag', () => {
         expect(result?.current.isLoading).toBe(false);
     });
-    test("testing status of current step", () => {
-        expect(result?.current.status).toBe("success");
+    test('testing status of current step', () => {
+        expect(result?.current.status).toBe('success');
     });
-    test("testing Final output", () => {
-        expect(result?.current.stepOutput).toBe("undefined10111011");
+    test('testing Final output', () => {
+        expect(result?.current.stepOutput).toBe('undefined10111011');
     });
-    test("testing shared state", () => {
-        expect(result?.current.sharedState).toEqual(["10", "11", "10", "11"]);
+    test('testing shared state', () => {
+        expect(result?.current.sharedState).toEqual(['10', '11', '10', '11']);
     });
-    test("testing isAllDone flag", () => {
+    test('testing isAllDone flag', () => {
         expect(result?.current.isAllDone).toBe(false);
     });
 });

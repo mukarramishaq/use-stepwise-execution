@@ -1,9 +1,13 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState } from 'react';
 
 /**
  * a basic interface of a single handler
  */
-export type StepHandlerType = (data: any, sharedState: any, setSharedState: React.Dispatch<any>) => Promise<any>;
+export type StepHandlerType = (
+  data: any,
+  sharedState: any,
+  setSharedState: React.Dispatch<any>
+) => Promise<any>;
 
 /**
  * this is the actual interface of defining steps and their handlers
@@ -50,7 +54,7 @@ export type StepsAndHandlersMapType = Array<Array<StepHandlerType>>;
  * every step will have one the following status showing
  * where its execution is
  */
-export type StepExecutionStatus = "notstarted" | "inprogress" | "success" | "error";
+export type StepExecutionStatus = 'notstarted' | 'inprogress' | 'success' | 'error';
 
 /**
  * main hook which will give you the functionality
@@ -89,7 +93,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [stepsAndHandlers, setStepsAndHandlers] = useState(stepsHandlers);
   const [stepOutput, setStepOutput] = useState<any>(undefined);
-  const [status, setStatus] = useState<StepExecutionStatus>("notstarted");
+  const [status, setStatus] = useState<StepExecutionStatus>('notstarted');
   const [isAllDone, setIsAllDone] = useState<boolean>(false);
   const [sharedState, setSharedState] = useState<any>({});
 
@@ -118,7 +122,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
    */
   const setCurrentStepAndReset = useCallback((step: number) => {
     setCurrentStep(step);
-    setStatus("notstarted");
+    setStatus('notstarted');
   }, []);
 
   /**
@@ -145,7 +149,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
    * @param {Boolean} force 
    */
   const next = useCallback((force = false) => {
-    if (force || status === "success") {
+    if (force || status === 'success') {
       //if is all steps executed
       if (currentStep >= stepsAndHandlers.length - 1) {
         setIsAllDone(true);
@@ -153,7 +157,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
         setCurrentStep((previousStep) => {
           return previousStep + 1;
         });
-        setStatus("notstarted");
+        setStatus('notstarted');
       }
     }
   }, [currentStep, status, stepsAndHandlers]);
@@ -179,20 +183,20 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
     if (stepsAndHandlers.length < 1) {
       return null;
     }
-    if (!force && status === "success") {
+    if (!force && status === 'success') {
       return stepOutput;
     }
     try {
-      setStatus("inprogress");
+      setStatus('inprogress');
       const finalOutput = await stepsAndHandlers[currentStep].reduce(async (previousOutputPromise, nextHandler) => {
         const previousOutput = await previousOutputPromise;
         return await nextHandler(previousOutput, sharedState, setSharedState);
       }, Promise.resolve(stepOutput));
       setStepOutput(finalOutput);
-      setStatus("success")
+      setStatus('success')
       return finalOutput;
     } catch (e) {
-      setStatus("error");
+      setStatus('error');
       throw e;
     }
   }, [currentStep, stepsAndHandlers, status, sharedState, setStepOutput]);
@@ -231,7 +235,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
      * of current step:
      * 
      * ```
-     * "notstarted" | "inprogress" | "success" | "error"
+     * 'notstarted' | 'inprogress' | 'success' | 'error'
      * ```
      * 
      * @type {StepExecutionStatus}
@@ -244,7 +248,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
      * 
      * @type {Boolean}
      */
-    isLoading: status === "inprogress",
+    isLoading: status === 'inprogress',
 
     /**
      * this will move to next step
@@ -298,7 +302,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
      * 
      * e.g 
      * ```
-     * updateSharedState({firstName: "john", lastName: "Doe"});
+     * updateSharedState({firstName: 'john', lastName: 'Doe'});
      * ```
      * 
      * NOTE: if you just want to update some value in the
@@ -310,8 +314,8 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
      * updateSharedState((previousState: any) => {
      *    return {
      *        ...previousState,
-     *        firstName: "fs name",
-     *        lastName: "ls name"
+     *        firstName: 'fs name',
+     *        lastName: 'ls name'
      *    };
      * });
      * ```
