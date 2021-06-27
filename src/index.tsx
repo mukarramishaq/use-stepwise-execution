@@ -187,7 +187,7 @@ const useStepwiseExecution = (initialStep = 0, stepsHandlers: StepsAndHandlersMa
       const finalOutput = await stepsAndHandlers[currentStep].reduce(async (previousOutputPromise, nextHandler) => {
         const previousOutput = await previousOutputPromise;
         return await nextHandler(previousOutput, sharedState, setSharedState);
-      }, Promise.resolve(setStepOutput));
+      }, Promise.resolve(stepOutput));
       setStepOutput(finalOutput);
       setStatus("success")
       return finalOutput;
