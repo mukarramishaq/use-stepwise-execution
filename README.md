@@ -10,6 +10,12 @@ You can install this hook using the following command:
 npm i --save use-stepwise-hook # or yarn add use-stepwise-hook
 ```
 
+## API Docs
+
+### useStepwiseExecution()
+
+This is the default export and main hook of this library
+
 ## Usage Example
 
 Suppose we have page where a user puts his `first name`, `last name`, `email address`, `password`
