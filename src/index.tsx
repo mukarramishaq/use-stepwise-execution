@@ -89,13 +89,13 @@ export type StepExecutionStatus =
  *      isAllDone
  * } = useStepwiseExecution(startStep, stepsAndHandlers);
  * ```
- * @param {Number} initialStep execution will start from this step
  * @param {StepsAndHandlersMapType} stepsHandlers an array of steps and their handlers. this will
+ * @param {Number} initialStep execution will start from this step
  * set how many steps are there
  */
 const useStepwiseExecution = (
-    initialStep = 0,
-    stepsHandlers: StepsAndHandlersMapType
+    stepsHandlers: StepsAndHandlersMapType,
+    initialStep = 0
 ) => {
     const [currentStep, setCurrentStep] = useState(initialStep);
     const [stepsAndHandlers, setStepsAndHandlers] = useState(stepsHandlers);
