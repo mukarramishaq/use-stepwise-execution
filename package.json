@@ -65,6 +65,8 @@
     "size-limit": "^4.11.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
+    "typedoc": "^0.21.2",
+    "typedoc-plugin-markdown": "^3.10.2",
     "typescript": "^4.3.2"
   }
 }

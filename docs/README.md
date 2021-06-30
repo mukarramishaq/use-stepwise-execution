@@ -1,3 +1,5 @@
+use-stepwise-execution / [Exports](modules.md)
+
 # React useStepwiseExecution Hook
 
 This react hook will give you the funtionality to perform a long and complex logic or multiple linked logics through multiple simple steps and will give you full control over each step so you can build more sophisticated functionality around it.
@@ -12,7 +14,7 @@ npm i --save use-stepwise-hook # or yarn add use-stepwise-hook
 
 ## API Docs
 
-See [Api Docs](docs/modules.md)
+See api docs use-stepwise-execution / [Exports](modules.md)
 
 ## Usage Example
 
@@ -90,7 +92,6 @@ Now lets see what's inside `subscription-steps.ts`
 
 ```javascript
 import { StepHandlerType } from "use-stepwise-hook";
-
 
 const stepsAndHandlers: Array<Array<StepHandlerType>> = [
   [

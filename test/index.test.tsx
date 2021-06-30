@@ -1,12 +1,12 @@
 import { renderHook, act, RenderResult, WaitForNextUpdate } from '@testing-library/react-hooks';
-import useStepwiseExecution, { StepsAndHandlersMapType } from '../src';
+import { useStepwiseExecution, StepsAndHandlersType } from '../src';
 
 describe('Initialization of the hook', () => {
     const { result } = renderHook(
         ({
             stepsAndHandlers,
         }: {
-            stepsAndHandlers: StepsAndHandlersMapType;
+            stepsAndHandlers: StepsAndHandlersType;
         }) => {
             return useStepwiseExecution(stepsAndHandlers);
         },
@@ -29,7 +29,7 @@ describe('Before executing a step', () => {
             stepsAndHandlers,
         }: {
             initialStep: number;
-            stepsAndHandlers: StepsAndHandlersMapType;
+            stepsAndHandlers: StepsAndHandlersType;
         }) => {
             return useStepwiseExecution(stepsAndHandlers, initialStep);
         },
@@ -60,7 +60,7 @@ describe('Before executing a step', () => {
                 stepsAndHandlers,
             }: {
                 initialStep: number;
-                stepsAndHandlers: StepsAndHandlersMapType;
+                stepsAndHandlers: StepsAndHandlersType;
             }) => {
                 return useStepwiseExecution(stepsAndHandlers, initialStep);
             },
@@ -84,7 +84,7 @@ describe('While executing a step', () => {
                 stepsAndHandlers,
             }: {
                 initialStep: number;
-                stepsAndHandlers: StepsAndHandlersMapType;
+                stepsAndHandlers: StepsAndHandlersType;
             }) => {
                 return useStepwiseExecution(stepsAndHandlers, initialStep);
             },
@@ -171,7 +171,7 @@ describe('After successful execution of a step', () => {
                 stepsAndHandlers,
             }: {
                 initialStep: number;
-                stepsAndHandlers: StepsAndHandlersMapType;
+                stepsAndHandlers: StepsAndHandlersType;
             }) => {
                 return useStepwiseExecution(stepsAndHandlers, initialStep);
             },
@@ -244,7 +244,7 @@ describe('After failed execution of a step', () => {
                 stepsAndHandlers,
             }: {
                 initialStep: number;
-                stepsAndHandlers: StepsAndHandlersMapType;
+                stepsAndHandlers: StepsAndHandlersType;
             }) => {
                 return useStepwiseExecution(stepsAndHandlers, initialStep);
             },
@@ -331,7 +331,7 @@ describe('After all steps are executed', () => {
                 stepsAndHandlers,
             }: {
                 initialStep: number;
-                stepsAndHandlers: StepsAndHandlersMapType;
+                stepsAndHandlers: StepsAndHandlersType;
             }) => {
                 return useStepwiseExecution(stepsAndHandlers, initialStep);
             },
@@ -454,7 +454,7 @@ describe('After Jumping to specific step', () => {
                 stepsAndHandlers,
             }: {
                 initialStep: number;
-                stepsAndHandlers: StepsAndHandlersMapType;
+                stepsAndHandlers: StepsAndHandlersType;
             }) => {
                 return useStepwiseExecution(stepsAndHandlers, initialStep);
             },
@@ -579,7 +579,7 @@ describe('Executing when 0 steps and handlers given', () => {
                 stepsAndHandlers,
             }: {
                 initialStep: number;
-                stepsAndHandlers: StepsAndHandlersMapType;
+                stepsAndHandlers: StepsAndHandlersType;
             }) => {
                 return useStepwiseExecution(stepsAndHandlers, initialStep);
             },
@@ -634,7 +634,7 @@ describe('Testing Execute function', () => {
                 stepsAndHandlers,
             }: {
                 initialStep: number;
-                stepsAndHandlers: StepsAndHandlersMapType;
+                stepsAndHandlers: StepsAndHandlersType;
             }) => {
                 return useStepwiseExecution(stepsAndHandlers, initialStep);
             },
@@ -736,7 +736,7 @@ describe('Testing next function when current step is successfully executed', () 
                 stepsAndHandlers,
             }: {
                 initialStep: number;
-                stepsAndHandlers: StepsAndHandlersMapType;
+                stepsAndHandlers: StepsAndHandlersType;
             }) => {
                 return useStepwiseExecution(stepsAndHandlers, initialStep);
             },
@@ -831,7 +831,7 @@ describe('Testing next function when current step is failed', () => {
                 stepsAndHandlers,
             }: {
                 initialStep: number;
-                stepsAndHandlers: StepsAndHandlersMapType;
+                stepsAndHandlers: StepsAndHandlersType;
             }) => {
                 return useStepwiseExecution(stepsAndHandlers, initialStep);
             },
@@ -923,7 +923,7 @@ describe('Setters Tesing', () => {
                 stepsAndHandlers,
             }: {
                 initialStep: number;
-                stepsAndHandlers: StepsAndHandlersMapType;
+                stepsAndHandlers: StepsAndHandlersType;
             }) => {
                 return useStepwiseExecution(stepsAndHandlers, initialStep);
             },

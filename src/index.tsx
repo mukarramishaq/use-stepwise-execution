@@ -1,77 +1,12 @@
 import React, { useCallback, useState } from 'react';
 
 /**
- * a basic interface of a single handler
- */
-export type StepHandlerType = (
-    data: any,
-    sharedState: any,
-    setSharedState: React.Dispatch<any>
-) => Promise<any>;
-
-/**
- * an interface for step
- */
-export type StepType = Array<StepHandlerType>;
-
-/**
- * this is the actual interface of defining steps and their handlers
- * our useStepwiseExecution hook accept this interface to register all
- * steps and their handlers
- *
- * Note: each index in the main array is a step where are all
- * elements in the child array of handlers of that step
- *
- * Note: output of first step will be input of next handler. The
- * second parameter is shared state which can be accessed. The
- * third parameter is shared state setter. Through which you can
- * update the shared state between all handlers of all step
- *
- * Note: if you want to break the loop of handlers then
- * just throw an error because otherwise a step will be
- * considered complete when its all handlers run successfully
- * without any error
- *
- * Note: all the handlers must be async of return promise
- *
- * e.g
- *
- *  const StepHandlers: StepsAndHandlersMapType = [
- *
- *       [
- *          //handlers of this step
- *       ], //first step
- *
- *       [
- *          //handlers of this step
- *       ], //second step
- *
- *       [
- *          //handlers of this step
- *       ], //third step
- *  ];
- *
- *
- * */
-export type StepsAndHandlersMapType = Array<StepType>;
-
-/**
- * every step will have one the following status showing
- * where its execution is
- */
-export type StepExecutionStatus =
-    | 'notstarted'
-    | 'inprogress'
-    | 'success'
-    | 'error';
-
-/**
  * main hook which will give you the functionality
  * to execute your logic in steps
  *
  *
  * Usage Example:
- * ```
+ * ```typescript
  * const startStep = 0;
  * const stepsAndHandlers = [
  *      [
@@ -92,14 +27,14 @@ export type StepExecutionStatus =
  *      isLoading,
  *      next,
  *      isAllDone
- * } = useStepwiseExecution(startStep, stepsAndHandlers);
+ * } = useStepwiseExecution(stepsAndHandlers, startStep);
  * ```
  * @param {StepsAndHandlersMapType} stepsHandlers an array of steps and their handlers. this will
  * @param {Number} initialStep execution will start from this step
  * set how many steps are there
  */
-const useStepwiseExecution = (
-    stepsHandlers: StepsAndHandlersMapType,
+export const useStepwiseExecution = (
+    stepsHandlers: StepsAndHandlersType,
     initialStep = 0
 ) => {
     const [currentStep, setCurrentStep] = useState(initialStep);
@@ -389,4 +324,69 @@ const useStepwiseExecution = (
     };
 };
 
-export default useStepwiseExecution;
+
+
+/**
+ * Interface of a step handler function
+ */
+export type StepHandlerType = (
+    data: any,
+    sharedState: any,
+    setSharedState: React.Dispatch<any>
+) => Promise<any>;
+
+/**
+ * Interface of a step
+ */
+export type StepType = Array<StepHandlerType>;
+
+/**
+ * this is the actual interface of defining steps and their handlers
+ * our useStepwiseExecution hook accept this interface to register all
+ * steps and their handlers
+ *
+ * *<Note:> each index in the main array is a step where are all
+ * elements in the child array of handlers of that step</Note:>
+ *
+ * *<Note:> output of first step will be input of next handler. The
+ * second parameter is shared state which can be accessed. The
+ * third parameter is shared state setter. Through which you can
+ * update the shared state between all handlers of all step</Note:>
+ *
+ * *<Note:> if you want to break the loop of handlers then
+ * just throw an error because otherwise a step will be
+ * considered complete when its all handlers run successfully
+ * without any error</Note:>
+ *
+ * *<Note:> all the handlers must be async of return promise</Note:>
+ *
+ * e.g
+ *```typescript
+ *  const StepHandlers: StepsAndHandlersMapType = [
+ *
+ *       [
+ *          //handlers of this step
+ *       ], //first step
+ *
+ *       [
+ *          //handlers of this step
+ *       ], //second step
+ *
+ *       [
+ *          //handlers of this step
+ *       ], //third step
+ *  ];
+ *```
+ *
+ * */
+export type StepsAndHandlersType = Array<StepType>;
+
+/**
+ * every step will have one the following status showing
+ * where its execution is
+ */
+export type StepExecutionStatus =
+    | 'notstarted'
+    | 'inprogress'
+    | 'success'
+    | 'error';
