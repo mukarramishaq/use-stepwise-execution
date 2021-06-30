@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState, Dispatch, SetStateAction } from 'react';
 
 /**
  * main hook which will give you the functionality
@@ -263,16 +263,16 @@ export const useStepwiseExecution = (
          * this function will be treated as shared state.
          *
          * e.g
-         * ```
+         * ```typescript
          * updateSharedState({firstName: 'john', lastName: 'Doe'});
          * ```
          *
-         * NOTE: if you just want to update some value in the
+         * *<NOTE:> if you just want to update some value in the
          * shared state not overwrite the whole state then pass
-         * function.
+         * function.</NOTE:>
          *
          * e.g
-         * ```
+         * ```typescript
          * updateSharedState((previousState: any) => {
          *    return {
          *        ...previousState,
@@ -296,7 +296,7 @@ export const useStepwiseExecution = (
         /**
          * registered steps and their handlers
          *
-         * @type {StepsAndHandlersMapType}
+         * @type {StepsAndHandlersType}
          */
         stepsAndHandlers,
 
@@ -311,6 +311,7 @@ export const useStepwiseExecution = (
          * CAUTION: Do not use these if you are not sure. because
          * these setters will change the behavior of the step
          * wise execution
+         *
          */
         setters: {
             setCurrentStepOnly,
@@ -320,11 +321,9 @@ export const useStepwiseExecution = (
             setStepOutput,
             setStatus,
             setIsAllDone,
-        },
+        } as SettersType,
     };
 };
-
-
 
 /**
  * Interface of a step handler function
@@ -390,3 +389,26 @@ export type StepExecutionStatus =
     | 'inprogress'
     | 'success'
     | 'error';
+
+/**
+ * These setters are not recommended for consumer
+ * and are being used in the internal working of this hook.
+ *
+ * But if you know what you are doing then you can have
+ * full control over this hook and its functionality using
+ * these setters.
+ *
+ * CAUTION: Do not use these if you are not sure. because
+ * these setters will change the behavior of the step
+ * wise execution
+ *
+ */
+export type SettersType = {
+    setCurrentStepOnly: (step: number) => void;
+    setCurrentStepAndReset: (step: number) => void;
+    setSharedState: Dispatch<SetStateAction<any>>;
+    setStepsAndHandlers: Dispatch<SetStateAction<StepsAndHandlersType>>;
+    setStepOutput: Dispatch<SetStateAction<any>>;
+    setStatus: Dispatch<SetStateAction<StepExecutionStatus>>;
+    setIsAllDone: Dispatch<SetStateAction<boolean>>;
+};

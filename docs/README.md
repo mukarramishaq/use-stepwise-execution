@@ -14,7 +14,7 @@ npm i --save use-stepwise-hook # or yarn add use-stepwise-hook
 
 ## API Docs
 
-See api docs use-stepwise-execution / [Exports](modules.md)
+See [Api Docs](docs/modules.md)
 
 ## Usage Example
 

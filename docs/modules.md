@@ -6,6 +6,7 @@
 
 ### Type aliases
 
+- [SettersType](modules.md#setterstype)
 - [StepExecutionStatus](modules.md#stepexecutionstatus)
 - [StepHandlerType](modules.md#stephandlertype)
 - [StepType](modules.md#steptype)
@@ -17,6 +18,39 @@
 
 ## Type aliases
 
+### SettersType
+
+Ƭ **SettersType**: `Object`
+
+These setters are not recommended for consumer
+and are being used in the internal working of this hook.
+
+But if you know what you are doing then you can have
+full control over this hook and its functionality using
+these setters.
+
+CAUTION: Do not use these if you are not sure. because
+these setters will change the behavior of the step
+wise execution
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `setCurrentStepAndReset` | (`step`: `number`) => `void` |
+| `setCurrentStepOnly` | (`step`: `number`) => `void` |
+| `setIsAllDone` | `Dispatch`<`SetStateAction`<`boolean`\>\> |
+| `setSharedState` | `Dispatch`<`SetStateAction`<`any`\>\> |
+| `setStatus` | `Dispatch`<`SetStateAction`<[`StepExecutionStatus`](modules.md#stepexecutionstatus)\>\> |
+| `setStepOutput` | `Dispatch`<`SetStateAction`<`any`\>\> |
+| `setStepsAndHandlers` | `Dispatch`<`SetStateAction`<[`StepsAndHandlersType`](modules.md#stepsandhandlerstype)\>\> |
+
+#### Defined in
+
+[index.tsx:406](https://github.com/mukarramishaq/use-stepwise-execution/blob/4a2151a/src/index.tsx#L406)
+
+___
+
 ### StepExecutionStatus
 
 Ƭ **StepExecutionStatus**: ``"notstarted"`` \| ``"inprogress"`` \| ``"success"`` \| ``"error"``
@@ -26,7 +60,7 @@ where its execution is
 
 #### Defined in
 
-[index.tsx:388](https://github.com/mukarramishaq/use-stepwise-execution/blob/934eecd/src/index.tsx#L388)
+[index.tsx:387](https://github.com/mukarramishaq/use-stepwise-execution/blob/4a2151a/src/index.tsx#L387)
 
 ___
 
@@ -54,7 +88,7 @@ Interface of a step handler function
 
 #### Defined in
 
-[index.tsx:332](https://github.com/mukarramishaq/use-stepwise-execution/blob/934eecd/src/index.tsx#L332)
+[index.tsx:331](https://github.com/mukarramishaq/use-stepwise-execution/blob/4a2151a/src/index.tsx#L331)
 
 ___
 
@@ -66,7 +100,7 @@ Interface of a step
 
 #### Defined in
 
-[index.tsx:341](https://github.com/mukarramishaq/use-stepwise-execution/blob/934eecd/src/index.tsx#L341)
+[index.tsx:340](https://github.com/mukarramishaq/use-stepwise-execution/blob/4a2151a/src/index.tsx#L340)
 
 ___
 
@@ -113,7 +147,7 @@ e.g
 
 #### Defined in
 
-[index.tsx:382](https://github.com/mukarramishaq/use-stepwise-execution/blob/934eecd/src/index.tsx#L382)
+[index.tsx:381](https://github.com/mukarramishaq/use-stepwise-execution/blob/4a2151a/src/index.tsx#L381)
 
 ## Functions
 
@@ -168,14 +202,7 @@ const {
 | `isLoading` | `boolean` |
 | `moveToStep` | (`step`: `number`) => `void` |
 | `next` | (`force`: `any`) => `void` |
-| `setters` | `Object` |
-| `setters.setCurrentStepAndReset` | (`step`: `number`) => `void` |
-| `setters.setCurrentStepOnly` | (`step`: `number`) => `void` |
-| `setters.setIsAllDone` | `Dispatch`<`SetStateAction`<`boolean`\>\> |
-| `setters.setSharedState` | `Dispatch`<`any`\> |
-| `setters.setStatus` | `Dispatch`<`SetStateAction`<[`StepExecutionStatus`](modules.md#stepexecutionstatus)\>\> |
-| `setters.setStepOutput` | `Dispatch`<`any`\> |
-| `setters.setStepsAndHandlers` | `Dispatch`<`SetStateAction`<[`StepsAndHandlersType`](modules.md#stepsandhandlerstype)\>\> |
+| `setters` | [`SettersType`](modules.md#setterstype) |
 | `sharedState` | `any` |
 | `status` | [`StepExecutionStatus`](modules.md#stepexecutionstatus) |
 | `stepOutput` | `any` |
@@ -184,4 +211,4 @@ const {
 
 #### Defined in
 
-[index.tsx:36](https://github.com/mukarramishaq/use-stepwise-execution/blob/934eecd/src/index.tsx#L36)
+[index.tsx:36](https://github.com/mukarramishaq/use-stepwise-execution/blob/4a2151a/src/index.tsx#L36)
