@@ -10,6 +10,11 @@ export type StepHandlerType = (
 ) => Promise<any>;
 
 /**
+ * an interface for step
+ */
+export type StepType = Array<StepHandlerType>;
+
+/**
  * this is the actual interface of defining steps and their handlers
  * our useStepwiseExecution hook accept this interface to register all
  * steps and their handlers
@@ -48,7 +53,7 @@ export type StepHandlerType = (
  *
  *
  * */
-export type StepsAndHandlersMapType = Array<Array<StepHandlerType>>;
+export type StepsAndHandlersMapType = Array<StepType>;
 
 /**
  * every step will have one the following status showing

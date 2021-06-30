@@ -1,6 +1,6 @@
 # React useStepwiseExecution Hook
 
-This react hook will give you the funtionality to perform a long and complex logic or multiple interlinked logics through multiple simple steps and will give you full control over each step so you can build more sophisticated functionality around it.
+This react hook will give you the funtionality to perform a long and complex logic or multiple linked logics through multiple simple steps and will give you full control over each step so you can build more sophisticated functionality around it.
 
 ## Installation
 
@@ -12,9 +12,28 @@ npm i --save use-stepwise-hook # or yarn add use-stepwise-hook
 
 ## API Docs
 
-### useStepwiseExecution()
+> useStepwiseExecution(`stepsAndHandlers`, `initialStep`)
 
-This is the default export and main hook of this library
+This is the default export and the react hook of this library. Here `stepsAndHandlers` is an array of steps where each step is an array of handlers where each handler is an async function. The handler function should of type `StepHandlerType`
+
+This hook (function) returns an object with the following properties:
+
+1. `currentStep`
+2. `status`
+3. `isLoading`
+4. `isAllDone`
+5. `stepOutput`
+6. `sharedState`
+7. `stepsAndHandlers`
+8. `execute`
+9. `next`
+10. `moveToStep`
+11. `updateSharedState`
+12. `setters`
+
+Below is the detail to each property of the returned object.
+
+## currentStep
 
 ## Usage Example
 
@@ -53,7 +72,7 @@ const SubscriptionPage = (props: any) => {
     execute, //this will execute all the handlers of current step
     isAllDone, //is true when the last step is successfully executed
     updateSharedState // function to update the state which is accessibel to all step handlers
-  } = useStepwiseExecution(0, stepsAndHandlers); //0 means start the execution from step 0, whereas second param is all about steps and their handlers
+  } = useStepwiseExecution(stepsAndHandlers, 0); //0 means start the execution from step 0, whereas second param is all about steps and their handlers
 
   //whenever form values change, update the form values
   // in the shared state, so our step handlers can use them
